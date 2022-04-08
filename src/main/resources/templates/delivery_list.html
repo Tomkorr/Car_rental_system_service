@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Wypożyczalnia samochodów</title>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="author" content="Tomasz Korus"/>
+    <th:block th:include="include/css" />
+    <style>
+        .glyphicon-trash {
+            color: #F00;
+        }
+    </style>
+</head>
+<body>
+
+
+<aside th:include="sidenav" class="main-sidebar"></aside>
+
+<div class="content-wrapper">
+            <section class="content">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="box box-primary">
+                            <div class="box-header with-border">
+                                <h3 class="box-title">Lista samochodów dostawczych w wypożyczalni</h3>
+
+                            </div>
+                            <div class="box-body">
+                                <h5>
+                                    <div th:if="${param.delete}" class="callout callout-danger">
+                                        <p>Usunięto samochód z oferty</p>
+                                    </div>
+                                </h5>
+                            </div>
+
+                            <div class="nav-tabs-custom">
+                                <ul class="nav nav-tabs">
+                                    <li class="active">
+                                        <a href="#active" data-toggle="tab">DOSTĘPNE <span class="badge bg-green" th:text="${countActive}"></span></a>
+                                    </li>
+                                    <li>
+                                        <a href="#inactive" data-toggle="tab">NIEDOSTĘPNE <span class="badge bg-red"
+                                                                                                th:text="${countInactive}"></span></a>
+                                    </li>
+                                </ul>
+
+                                <div class="tab-content">
+                                    <div class="tab-pane active" id="active">
+                                        <div class="row">
+                                            <div class="col-xs-12">
+                                                <table class="table table-bordered table-hover" width="100%" cellspacing="0">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>#</th>
+                                                            <th>Marka</th>
+                                                            <th>Model</th>
+                                                            <th>Rocznik</th>
+                                                            <th>Cena/dzień</th>
+                                                            <th>Dostępność</th>
+                                                            <th>Rezerwacja</th>
+                                                            <th data-orderable="false">Szczegóły</th>
+                                                            <th data-orderable="false">Usuń</th>
+                                                        </tr>
+                                                    </thead>
+
+                                                    <tbody>
+                                                        <tr th:each="car, i: ${availableCars}">
+                                                            <td th:text="${i.index+1}"></td>
+                                                            <td th:text="${car.brand}"></td>
+                                                            <td th:text="${car.model}"></td>
+                                                            <td th:text="${car.year}"></td>
+                                                            <td th:text="${car.pricePerDay}"></td>
+                                                            <td th:switch="${car.available}">
+                                                                <form th:action="@{|/set_not_available/${car.carId}|}" th:method="get">
+                                                                    <span th:case="true" class="label label-success">TAK</span>
+                                                                    <button type="submit" class="btn btn-default btn-xs">ZMIEŃ</button>
+                                                                </form>
+                                                            </td>
+                                                            <td th:if="${car.available}==false"><i>Brak możliwości
+                                                                    rezerwacji</i></td>
+                                                            <td th:if="${car.available}==true"><a
+                                                                    th:href="@{|/create_rental_order/${car.carId}|}"
+                                                                    type="button" class="btn btn-primary btn-xs">REZERWUJ</a>
+                                                            </td>
+                                                            <td>
+                                                                <a th:href="@{|/car_details/${car.carId}|}"><span
+                                                                        class="glyphicon glyphicon-info-sign fa-lg"
+                                                                        style="font-size: larger;">szczegóły</span></a>
+                                                            </td>
+                                                            <td th:if="${car.available}==false"><i>wypożyczony</i></td>
+                                                            <td th:if="${car.available}==true">
+                                                                <a th:href="@{|/delete_car/${car.carId}|}"
+                                                                   class="btn glyphicon glyphicon-trash fa-lg"></a>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="tab-pane" id="inactive">
+                                        <div class="row">
+                                            <div class="col-xs-12">
+                                                <table class="table table-bordered table-hover" width="100%" cellspacing="0">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>#</th>
+                                                            <th>Marka</th>
+                                                            <th>Model</th>
+                                                            <th>Rocznik</th>
+                                                            <th>Cena/dzień</th>
+                                                            <th>Dostępność</th>
+                                                            <th>Rezerwacja</th>
+                                                            <th data-orderable="false">Szczegóły</th>
+                                                            <th data-orderable="false">Usuń</th>
+                                                        </tr>
+                                                    </thead>
+
+                                                    <tbody>
+                                                        <tr th:each="car, i: ${noAvailableCars}">
+                                                            <td th:text="${i.index+1}"></td>
+                                                            <td th:text="${car.brand}"></td>
+                                                            <td th:text="${car.model}"></td>
+                                                            <td th:text="${car.year}"></td>
+                                                            <td th:text="${car.pricePerDay}"></td>
+                                                            <td th:switch="${car.available}">
+                                                                <form th:action="@{|/set_available/${car.carId}|}" th:method="get">
+                                                                <span th:case="false" class="label label-danger">NIE</span>
+                                                                <button th:if="${car.isRented == FALSE}" type="submit" class="btn btn-default btn-xs">ZMIEŃ</button>
+                                                                </form>
+                                                            </td>
+                                                            <td th:if="${car.available}==false"><i>Brak możliwości rezerwacji</i></td>
+                                                            <td th:if="${car.available}==true"><a
+                                                                    th:href="@{|/create_rental_order/${car.carId}|}"
+                                                                    type="button" class="btn btn-primary btn-xs">REZERWUJ</a>
+                                                            </td>
+                                                            <td>
+                                                                <a th:href="@{|/car_details/${car.carId}|}"><span
+                                                                        class="glyphicon glyphicon-info-sign fa-lg"
+                                                                        style="font-size: larger;">szczegóły</span></a>
+                                                            </td>
+                                                            <td th:if="${car.isRented}==true"><i>wypożyczony</i></td>
+                                                            <td th:if="${car.isRented}==false"><i>niedostępny</i></td>
+                                                            <td th:if="${car.available}==true">
+                                                                <a th:href="@{|/delete_car/${car.carId}|}"
+                                                                   class="btn glyphicon glyphicon-trash fa-lg"></a>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+
+<script src="https://code.jquery.com/jquery-2.2.4.min.js"
+        integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+        integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/admin-lte/2.3.6/js/app.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.12/js/dataTables.bootstrap.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        var url = document.location.toString();
+
+        function activaTab(tabID) {
+            $('.nav-tabs a[href="#' + tabID + '"]').tab('show');
+        };
+        activaTab(url.split('#')[1]);
+        $("html,body").animate({scrollTop: 0}, "fast");
+
+        $('table').DataTable({
+            "language": {
+                "search": "Wyszukaj: ",
+                "info": "Wyświetlono _START_ do _END_ z _TOTAL_ samochodów. ",
+                "infoEmpty": "Wyświetlono _TOTAL_ samochodów. ",
+                "infoFiltered": "Po przefiltrowaniu _TOTAL_ z _MAX_ wszystkich samochodów.",
+                "lengthMenu": "Wyświetl _MENU_ samochodów na stronie.",
+                "zeroRecords": "Brak samochodów na liście",
+                "paginate": {
+                    "previous": "&lt;",
+                    "next": "&gt;"
+                }
+            }
+        });
+    });
+
+    $(document).ready(function () {
+        setTimeout(function () {
+            $('.callout').hide('slow');
+        }, 3000);
+    });
+
+</script>
+</body>
+</html>

@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>Wypożyczalnia samochodów</title>
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <meta name="author" content="Tomasz Korus"/>
+        <th:block th:include="include/css" />
+        <style>
+            .glyphicon-trash {
+                color: #F00;
+            }
+        </style>
+    </head>
+    <body>
+
+
+        <aside th:include="sidenav" class="main-sidebar"></aside>
+
+        <div class="content-wrapper">
+            <section class="content">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="box box-primary">
+                            <div class="box-header with-border">
+                                <h3 class="box-title">Lista wypożyczeń</h3>
+
+                            </div>
+                            <div class="box-body">
+                                <h5>
+                                    <div th:if="${param.delete}" class="callout callout-danger">
+                                        <p>Usunięto samochód z oferty</p>
+                                    </div>
+                                </h5>
+                                <h5>
+                                    <div th:if="${param.carNoAvailable}" class="callout callout-danger">
+                                        <p>Samochód jest niedostępny</p>
+                                    </div>
+                                </h5>
+                            </div>
+
+                            <div class="nav-tabs-custom">
+                                <ul class="nav nav-tabs">
+                                    <li class="active">
+                                        <a href="#active" data-toggle="tab">ROZPOCZĘTE <span class="badge bg-green" th:text="${countActive}"></span></a>
+                                    </li>
+                                    <li>
+                                        <a href="#reserved" data-toggle="tab">REZERWACJE <span class="badge bg-yellow" th:text="${countReserved}"></span></a>
+                                    </li>
+                                    <li>
+                                        <a href="#toConfirm" data-toggle="tab">DO POTWIERDZENIA <span class="badge bg-blue" th:text="${countToConfirm}"></span></a>
+                                    </li>
+                                    <li>
+                                        <a href="#inactive" data-toggle="tab">ZAKOŃCZONE <span class="badge bg-grey" th:text="${countInactive}"></span></a>
+                                    </li>
+                                    <li>
+                                        <a href="#cancelled" data-toggle="tab">ANULOWANE <span class="badge bg-red" th:text="${countCancelled}"></span></a>
+                                    </li>
+                                </ul>
+
+                                <div class="tab-content">
+                                    <div class="tab-pane active" id="active">
+                                        <div class="row">
+                                            <div class="col-xs-12">
+                                                <table class="table table-bordered table-hover" width="100%" cellspacing="0">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Od</th>
+                                                            <th>Do</th>
+                                                            <th>Klient</th>
+                                                            <th>Samochód</th>
+                                                            <th>Szczegóły</th>
+                                                            <th></th>
+                                                        </tr>
+                                                    </thead>
+
+                                                    <tbody>
+                                                        <tr th:each="order, i: ${activeOrders}">
+                                                            <td th:text="${order.rentStartDate +''}"></td>
+                                                            <td th:text="${order.rentEndDate +''}"></td>
+                                                            <td th:text="${order.custFirstName} + ' ' + ${order.custLastName}"></td>
+                                                            <td th:text="${order.brand} + ' ' + ${order.model}"></td>
+                                                            <td>
+                                                                <a th:href="@{|/order_details/${order.orderId}|}"><span class="glyphicon glyphicon-info-sign fa-lg" style="font-size: larger;">szczegóły</span></a>
+                                                            </td>
+                                                            <td>
+                                                                <button id="cancelOrder" th:onClick="'cde(\'' + ${order.orderId} + '\');'" class="btn btn-danger btn-xs">ANULUJ</button>
+                                                            </td>
+                                                
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="tab-pane" id="reserved">
+                                        <div class="row">
+                                            <div class="col-xs-12">
+                                                <table class="table table-bordered table-hover" width="100%" cellspacing="0">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Od</th>
+                                                            <th>Do</th>
+                                                            <th>Klient</th>
+                                                            <th>Samochód</th>
+                                                            <th>Szczegóły</th>
+                                                            <th></th>
+                                                        </tr>
+                                                    </thead>
+
+                                                    <tbody>
+                                                        <tr th:each="order, i: ${reservedOrders}">
+                                                            <td th:text="${order.rentStartDate +''}"></td>
+                                                            <td th:text="${order.rentEndDate +''}"></td>
+
+                                                            <td th:text="${order.custFirstName} + ' ' + ${order.custLastName}"></td>
+                                                            <td th:text="${order.brand} + ' ' + ${order.model}"></td>
+                                                            <td>
+                                                                <a th:href="@{|/order_details/${order.orderId}|}"><span class="glyphicon glyphicon-info-sign fa-lg" style="font-size: larger;">szczegóły</span></a>
+                                                            </td>
+                                                            <td>
+                                                                <button id="cancelOrder" th:onClick="'bcd(\'' + ${order.orderId} + '\');'" class="btn btn-danger btn-xs">ANULUJ</button>
+                                                            </td>
+                                                 
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="tab-pane" id="toConfirm">
+                                        <div class="row">
+                                            <div class="col-xs-12">
+                                                <table class="table table-bordered table-hover" width="100%" cellspacing="0">
+                                                    <thead>
+                                                        <tr>
+                                                            <th></th>
+                                                            <th>Od</th>
+                                                            <th>Do</th>
+                                                            <th>Klient</th>
+                                                            <th>Samochód</th>
+                                                            <th>Szczegóły</th>
+                                                            <th></th>
+                                                            <th></th>
+                                                        </tr>
+                                                    </thead>
+
+                                                    <tbody>
+                                                        <tr th:each="order, i: ${toConfirmOrders}">
+                                                            <td th:text="${i.index+1}"></td>
+                                                            <td th:text="${order.rentStartDate +''}"></td>
+                                                            <td th:text="${order.rentEndDate +''}"></td>
+                                                            <td th:text="${order.custFirstName} + ' ' + ${order.custLastName}"></td>
+                                                            <td th:text="${order.brand} + ' ' + ${order.model}"></td>
+                                                            <td>
+                                                                <a th:href="@{|/order_details/${order.orderId}|}"><span class="glyphicon glyphicon-info-sign fa-lg" style="font-size: larger;">szczegóły</span></a>
+                                                            </td>
+                                                            <td th:if="${order.employeeIdLetOut == NULL AND order.employeeIdReceive == NULL}"><a
+                                                                    th:href="@{|/confirm_let_out_car/${order.orderId}/${order.carId}|}"
+                                                                    type="button" class="btn btn-primary btn-xs">WYDAJ SAMOCHÓD</a>
+                                                            </td>
+                                                            <td th:if="${order.employeeIdLetOut != NULL AND order.employeeIdReceive == NULL}"><a
+                                                                    th:href="@{|/confirm_receive_car/${order.orderId}/${order.carId}|}"
+                                                                    type="button" class="btn btn-primary btn-xs">PRZYJMIJ SAMOCHÓD</a>
+                                                            </td>
+                                                            <td>
+                                                                <button id="cancelOrder" th:onClick="'abc(\'' + ${order.orderId} + '\');'" class="btn btn-danger btn-xs">ANULUJ</button>
+                                                            </td>
+                                                
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="tab-pane" id="inactive">
+                                        <div class="row">
+                                            <div class="col-xs-12">
+                                                <table class="table table-bordered table-hover" width="100%" cellspacing="0">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Od</th>
+                                                            <th>Do</th>
+                                                            <th>Klient</th>
+                                                            <th>Samochód</th>
+                                                            <th>Szczegóły</th>
+                                                        </tr>
+                                                    </thead>
+
+                                                    <tbody>
+                                                        <tr th:each="order, i: ${inactiveOrders}">
+                                                            <td th:text="${order.rentStartDate +''}"></td>
+                                                            <td th:text="${order.rentEndDate +''}"></td>
+                                                            <td th:text="${order.custFirstName} + ' ' + ${order.custLastName}"></td>
+                                                            <td th:text="${order.brand} + ' ' + ${order.model}"></td>
+                                                            <td>
+                                                                <a th:href="@{|/order_details/${order.orderId}|}"><span class="glyphicon glyphicon-info-sign fa-lg" style="font-size: larger;">szczegóły</span></a>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane" id="cancelled">
+                                        <div class="row">
+                                            <div class="col-xs-12">
+                                                <table class="table table-bordered table-hover" width="100%" cellspacing="0">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>#</th>
+                                                            <th>Klient</th>
+                                                            <th>Samochód</th>
+                                                            <th>Szczegóły</th>
+                                                        </tr>
+                                                    </thead>
+
+                                                    <tbody>
+                                                        <tr th:each="order, i: ${cancelledOrders}">
+                                                            <td th:text="${i.index+1}"></td>
+
+                                                            <td th:text="${order.custFirstName} + ' ' + ${order.custLastName}"></td>
+                                                            <td th:text="${order.brand} + ' ' + ${order.model}"></td>
+                                                            <td>
+                                                                <a th:href="@{|/order_details/${order.orderId}|}"><span class="glyphicon glyphicon-info-sign fa-lg" style="font-size: larger;">szczegóły</span></a>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+
+        <script src="https://code.jquery.com/jquery-2.2.4.min.js"
+        integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+                integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+        crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/admin-lte/2.3.6/js/app.min.js"></script>
+        <script src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
+        <script src="https://cdn.datatables.net/1.10.12/js/dataTables.bootstrap.min.js"></script>
+        <script type="text/javascript"  th:inline="javascript">
+
+            $(document).ready(function () {
+                $("#cancelOrderBox").hide();
+                // <![CDATA[
+                var orderToConfirmId = [[${ordersToConfirmId
+                }
+                ]];
+                for (var i = 0; i < orderToConfirmId.length; i++) {
+                $("#cancelOrderBox" + orderToConfirmId[i]).hide();
+                }
+                var reservedOrdersId = [[${ordersReservedId
+                }
+                ]];
+                for (var i = 0; i < reservedOrdersId.length; i++) {
+                    $("#cancelOrderBox" + reservedOrdersId[i]).hide();
+                }
+                 var activeOrdersId = [[${ordersActiveId
+                }
+                ]];
+                for (var i = 0; i < activeOrdersId.length; i++) {
+                    $("#cancelOrderBox" + activeOrdersId[i]).hide();
+                }
+
+                abc = function (id) {
+                    if ($('#cancelOrderBox' + id).css('display') == 'none') {
+                        $("#cancelOrderBox" + id).show();
+                        for (var i = 0; i < orderToConfirmId.length; i++) {
+                            if (orderToConfirmId[i] != id) {
+                                $("#cancelOrderBox" + orderToConfirmId[i]).hide();
+                            }
+                        }
+                    } else {
+                        $("#cancelOrderBox" + id).hide();
+                    }
+                };
+                bcd = function (id) {
+                    if ($('#cancelOrderBox' + id).css('display') == 'none') {
+                        $("#cancelOrderBox" + id).show();
+                        for (var i = 0; i < reservedOrdersId.length; i++) {
+                            if (reservedOrdersId[i] != id) {
+                                $("#cancelOrderBox" + reservedOrdersId[i]).hide();
+                            }
+                        }
+                    } else {
+                        $("#cancelOrderBox" + id).hide();
+                    }
+                };
+                cde = function (id) {
+                    if ($('#cancelOrderBox' + id).css('display') == 'none') {
+                        $("#cancelOrderBox" + id).show();
+                        for (var i = 0; i < activeOrdersId.length; i++) {
+                            if (activeOrdersId[i] != id) {
+                                $("#cancelOrderBox" + activeOrdersId[i]).hide();
+                            }
+                        }
+                    } else {
+                        $("#cancelOrderBox" + id).hide();
+                    }
+                };
+                // ]]>
+                var url = document.location.toString();
+                
+                console.log(url);
+
+                function activaTab(tabID) {
+                    $('.nav-tabs a[href="#' + tabID + '"]').tab('show');
+                }
+                ;
+                activaTab(url.split('#')[1]);
+                $("html,body").animate({scrollTop: 0}, "fast");
+
+                $('table').DataTable({
+                    "language": {
+                        "search": "Wyszukaj: ",
+                        "info": "Wyświetlono _START_ do _END_ z _TOTAL_ wypożyczeń. ",
+                        "infoEmpty": "Wyświetlono _TOTAL_ wypożyczeń. ",
+                        "infoFiltered": "Po przefiltrowaniu _TOTAL_ z _MAX_ wszystkich wypożyczeń.",
+                        "lengthMenu": "Wyświetl _MENU_ wypożyczeń na stronie.",
+                        "zeroRecords": "Brak wypożyczeń na liście",
+                        "paginate": {
+                            "previous": "&lt;",
+                            "next": "&gt;"
+                        }
+                    }
+                });
+            });
+
+            $(document).ready(function () {
+                setTimeout(function () {
+                    $('.callout').hide('slow');
+                }, 3000);
+            });
+
+        </script>
+    </body>
+</html>

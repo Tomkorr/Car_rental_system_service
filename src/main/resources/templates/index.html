@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>Wypożyczalnia samochodów</title>
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <meta name="author" content="Tomasz Korus"/>
+
+        <th:block th:include="include/css" />
+      
+    </head>
+    <body>
+
+        <aside th:include="sidenav" class="main-sidebar"></aside>
+
+        <div class="content-wrapper">
+            <section class="content">
+                <div class="box box-primary">
+
+                    <div class="box box-primary">
+                        <div class="box-header with-border">
+                            <section class="content-header">
+                                <h1>STATYSTYKI</h1>
+                            </section>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="box-header with-border">
+                            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                <div class="info-box bg-aqua">
+                                    <span class="info-box-icon"><i class="fa fa-car"></i></span>
+
+
+                                    <a href="/passenger_list" style="color: white">
+                                        <div class="info-box-content">
+                                            <span class="info-box-text">Ilość samochodów w ofercie wypożyczalni</span>
+                                            <span class="info-box-number">
+                                                <span th:text="${countCars}"></span>
+                                            </span>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                <div class="info-box bg-aqua">
+                                    <span class="info-box-icon"><i class="fa fa-users"></i></span>
+
+                                    <a href="/customers_list" style="color: white">
+                                        <div class="info-box-content">
+                                            <span class="info-box-text">Ilość klientów wypożyczalni</span>
+                                            <span class="info-box-number">
+                                                <span th:text="${countCustomers}"></span>
+                                            </span>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                <div class="info-box bg-aqua">
+                                    <span class="info-box-icon"><i class="fa fa-user"></i></span>
+
+                                    <a href="/employees_list" style="color: white">
+                                        <div class="info-box-content">
+                                            <span class="info-box-text">Ilość pracowników</span>
+                                            <span class="info-box-number">
+                                                <span th:text="${countEmployees}"></span>
+                                            </span>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                <div class="info-box bg-aqua">
+                                    <span class="info-box-icon"><i class="fa fa-key"></i></span>
+
+                                    <a href="/rental_orders_list" style="color: white">
+                                        <div class="info-box-content">
+                                            <span class="info-box-text">Ilość wszystkich wypożyczeń</span>
+                                            <span class="info-box-number">
+                                                <span th:text="${countOrders}"></span>
+                                            </span>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                  
+                </div>
+            </section>
+        </div>
+        <script type="text/javascript">
+
+        </script>
+    </body>
+</html>

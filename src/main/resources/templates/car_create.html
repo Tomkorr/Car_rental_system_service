@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>Wypożyczalnia samochodów</title>
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <meta name="author" content="Tomasz Korus"/>
+        <th:block th:include="include/css" />
+
+    </head>
+    <body>
+
+
+        <aside th:include="sidenav" class="main-sidebar"></aside>
+
+        <div class="content-wrapper">
+            <section class="content">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <form id="car" class="form-horizontal" th:action="@{/car_create}"
+                              th:object="${CarCreateForm}" method="post">
+                            <div class="box box-primary">
+                                <div class="box-header with-border">
+                                    <h3 class="box-title">Dodaj samochód do oferty</h3><br></br>
+                                    <a href="/lista_samochodow" class="btn bg-light-blue btn-xs"><strong><i class="fa fa-undo"></i> Wróć do listy samochodów</strong></a>
+                                </div>
+                                <div class="box-body">
+
+                                    <div class="form-group">
+                                        <label for="brand" class="col-lg-2 col-md-2 control-label">Marka<span
+                                                class="required">*</span></label>
+                                        <div class="col-lg-4 col-md-6">
+                                            <input id="brand" type="text" class="form-control" th:field="*{brandForm}"
+                                                   required="required"/>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="model" class="col-lg-2 col-md-2 control-label">Model<span
+                                                class="required">*</span></label>
+                                        <div class="col-lg-4 col-md-6">
+                                            <input id="model" type="text" class="form-control" th:field="*{modelForm}"
+                                                   required="required"/>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="year" class="col-lg-2 col-md-2 control-label">Rocznik<span
+                                                class="required">*</span></label>
+                                        <div class="col-lg-4 col-md-6">
+                                            <input id="year" type="number" class="form-control" th:field="*{yearForm}"
+                                                   required="required"/>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="color" class="col-lg-2 col-md-2 control-label">Kolor<span
+                                                class="required">*</span></label>
+                                        <div class="col-lg-4 col-md-6">
+                                            <input id="color" type="text" class="form-control" th:field="*{colorForm}"
+                                                   required="required"/>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="engine" class="col-lg-2 col-md-2 control-label">Silnik<span
+                                                class="required">*</span></label>
+                                        <div class="col-lg-4 col-md-6">
+                                            <input id="engine" type="text" class="form-control" th:field="*{engineForm}"
+                                                   required="required"/>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="fuel" class="col-lg-2 col-md-2 control-label">Rodzaj paliwa<span
+                                                class="required">*</span></label>
+                                        <div class="col-lg-4 col-md-6">
+                                            <select id="fuel" type="text" class="form-control select2" th:field="*{fuelForm}"
+                                                    required="required">
+                                                <option th:value="Benzyna">Benzyna</option>
+                                                <option th:value="Diesel">Diesel</option>
+                                                <option th:value="LPG">LPG</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <!--
+                                                                <div class="form-group">
+                                                                <label class="control-label col-lg-2 col-md-2 " for="date">Data wypożyczenia</label>
+                                                                    <div class="col-lg-4 col-md-6">
+                                                                <input class="form-control" id="date" name="date" placeholder="MM/DD/YYY" type="text"/>
+                                                                    </div>
+                                                                </div>
+                                    -->
+
+
+
+                                    <div class="form-group">
+                                        <label for="transmission" class="col-lg-2 col-md-2 control-label">Skrzynia biegów<span
+                                                class="required">*</span></label>
+                                        <div class="col-lg-4 col-md-6">
+                                            <select id="transmission" type="text" class="form-control select2"
+                                                    th:field="*{transmissionForm}" required="required" onchange="change(this)">
+                                                <option th:value="Automatyczna">Automatyczna</option>
+                                                <option th:value="Manualna">Manualna</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="type" class="col-lg-2 col-md-2 control-label">Typ<span
+                                                class="required">*</span></label>
+                                        <div class="col-lg-4 col-md-6">
+
+                                            <label class="radio-inline">
+                                                <input id="typeForm" type="radio" name="typeForm"
+                                                       th:value="Osobowy" checked="checked" />Osobowy
+                                            </label>
+
+                                            <label class="radio-inline">
+                                                <input id="typeForm" type="radio" name="typeForm"
+                                                       th:value="Dostawczy" />Dostawczy
+                                            </label>
+
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="pricePerDay" class="col-lg-2 col-md-2 control-label">Cena/dzień<span
+                                                class="required">*</span></label>
+                                        <div class="col-lg-4 col-md-6">
+                                            <input id="pricePerDay" type="text" class="form-control"
+                                                   th:field="*{pricePerDayForm}" required="required"/>
+                                        </div>
+                                    </div>
+                                    <button type="submit" class="btn bg-green pull-right col-lg-2 col-md-2 col-sm-4 col-xs-5">
+                                        <strong><i class="fa fa-plus"></i> ZAPISZ</strong></button>
+                                </div>
+
+                            </div>
+
+                        </form>
+
+                    </div>
+                </div>
+            </section>
+        </div>
+        <script>
+            $(document).ready(function () {
+                var date_input = $('input[name="date"]'); //our date input has the name "date"
+                var container = $('.bootstrap-iso form').length > 0 ? $('.bootstrap-iso form').parent() : "body";
+                var options = {
+                    format: 'mm/dd/yyyy',
+                    container: container,
+                    todayHighlight: true,
+                    autoclose: true,
+                };
+                date_input.datepicker(options);
+            })
+
+        </script>
+    </body>
+</html>

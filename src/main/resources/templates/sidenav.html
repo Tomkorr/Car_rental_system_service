@@ -1,0 +1,92 @@
+<section class="sidebar" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+    <div class="dropdown">
+        <ul class="sidebar-menu">
+
+            <li>
+            <a href="/logout">
+                <i class="fa fa-sign-out"></i> <span>Wyloguj się</span>
+            </a>
+            </li>
+            
+            <li class="header">
+                ZALOGOWANY JAKO: <a th:href="@{|/employee_details/${employee.employeeId}|}"><i class="fa fa-user"></i><strong><span th:text="${employee.firstName + ' ' + employee.lastName}" /></strong></a>
+            </li>
+
+            <li class="header">CAR RENTAL</li>
+
+            <li>
+                <a href="/">
+                    <i class="fa fa-home"></i> <span>Strona główna</span>
+                </a>
+            </li>
+
+            <li class="header">SAMOCHODY</li>
+
+            <li>
+                <a href="/passenger_list">
+                    <i class="fa fa-car"></i>Osobowe&nbsp;<span class="badge bg-green"
+                                                                         th:text="${countPassengerCars}"></span>
+                </a>
+            </li>
+            
+             <li>
+                <a href="/delivery_list">
+                    <i class="fa fa-truck"></i>Dostawcze&nbsp;<span class="badge bg-green"
+                                                                         th:text="${countDeliveryCars}"></span>
+                </a>
+            </li>
+
+            <li>
+                <a href="/car_create">
+                    <i class="fa fa-plus"></i> <span>Dodaj samochód</span>
+                </a>
+            </li>
+
+            <li class="header">KLIENCI</li>
+
+            <li>
+                <a href="/customers_list">
+                    <i class="fa fa-list"></i>Lista klientów&nbsp;<span class="badge bg-green"
+                                                                        th:text="${countCustomers}"></span>
+                </a>
+            </li>
+
+            <li>
+                <a href="/customer_create">
+                    <i class="fa fa-plus"></i> <span>Dodaj klienta</span>
+                </a>
+            </li>
+
+
+            <li sec:authorize="hasRole('ROLE_ADMIN')" class="header">PRACOWNICY</li>
+            <li sec:authorize="hasRole('ROLE_ADMIN')">
+                <a href="/employees_list">
+                    <i class="fa fa-list"></i>Lista pracowników&nbsp;<span class="badge bg-green" th:text="${countEmployees}"></span>
+                </a>
+            </li>
+
+            <li sec:authorize="hasRole('ROLE_ADMIN')">
+                <a href="/employee_create">
+                    <i class="fa fa-plus"></i> <span>Dodaj pracownika</span>
+                </a>
+            </li>
+
+            <li class="header">WYPOŻYCZENIA</li>
+            <li>
+                <a href="/rental_orders_list">
+                    <i class="fa fa-list"></i>Lista wypożyczeń&nbsp;<span class="badge bg-green"
+                                                                           th:text="${countOrders}"></span>
+                </a>
+            </li>
+
+            <!--<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Lista samochodów
+                <span class="caret"></span></button>
+            <ul class="dropdown-menu">
+            <li>osobowe</li>
+            <li>dostawcze</li>
+            </ul>-->
+
+
+        </ul>
+    </div>
+</section>

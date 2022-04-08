@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>Wypożyczalnia samochodów</title>
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <meta name="author" content="Tomasz Korus"/>
+        <th:block th:include="include/css" />
+
+
+    </head>
+    <body>
+
+
+        <aside th:include="sidenav" class="main-sidebar"></aside>
+
+        <div class="content-wrapper">
+            <section class="content">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <form id="rentalOrder" class="form-horizontal" th:action="@{|/create_rentall_order/${carId}|}"
+                              th:object="${RentalOrdersCreateForm}" method="post">
+                            <div class="box box-primary">
+                                <div class="box-header with-border">
+                                    <h3 class="box-title">Zrealizuj wypożyczenie samochodu</h3>
+                                </div>
+                                <div class="box-body">
+                                    <h5>
+                                        <div th:if="${param.dateError}" class="callout callout-danger">
+                                            <p>Data oddania nie może być wcześniejsza niż data wypożyczenia</p>
+                                        </div>
+                                        <div th:if="${param.dateExist}" class="callout callout-danger">
+                                            <p>W tym terminie ten samochód jest zarezerwowany</p>
+                                        </div>
+                                    </h5>
+
+                                    <div class="form-group row" th:each="car : ${car}">
+                                        <label for="car" class="col-lg-2 control-label">Samochód</label>
+                                        <div class="col-lg-4 col-md-6">
+                                            <input id="car" type="text" class="form-control" th:value="${car.brand + ' ' + car.model}"
+                                                   readonly="readonly"/>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="customer" class="col-lg-2 col-md-2 control-label">Wybierz klienta<span
+                                                class="required">*</span></label>
+                                        <div class="col-lg-4 col-md-6">
+                                            <select id="customer" th:field="*{customerId}" class="form-control select2" required="required">
+                                                <option th:each="customer : ${Customers}" th:text="${customer.firstName + ' ' + customer.lastName}" th:value="${customer.customerId}"></option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <!--
+                                                                <div class="form-group">
+                                                                    <label for="car" class="col-lg-2 col-md-2 control-label">Wybierz samochód<span
+                                                                            class="required">*</span></label>
+                                                                    <div class="col-lg-4 col-md-6">
+                                                                        <select id="car" th:field="*{carId}" class="form-control select2" required="required">
+                                                                            <option th:each="car : ${Cars}" th:text="${car.brand + ' ' + car.model}" th:value="${car.carId}"></option>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                    -->
+                                    <div class="form-group">
+                                        <label class="control-label col-lg-2 col-md-2 " for="dateStart">Data wypożyczenia<span
+                                                class="required">*</span></label>
+                                        <div class="col-lg-4 col-md-6">
+                                            <input class="form-control" id="dateStart" name="startDate" placeholder="RRRR-MM-DD"
+                                                   type="text" required="required"/>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="control-label col-lg-2 col-md-2 " for="dateEnd">Data oddania<span
+                                                class="required">*</span></label>
+                                        <div class="col-lg-4 col-md-6">
+                                            <input class="form-control" id="dateEnd" name="endDate" placeholder="RRRR-MM-DD"
+                                                   type="text" required="required"/>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="price" class="col-lg-2 control-label">Cena/dzień</label>
+                                        <div class="col-lg-4 col-md-6">
+                                            <input id="price" type="text" class="form-control" th:value="${car.pricePerDay + ' zł'}"
+                                                   readonly="readonly"/>
+                                        </div>
+                                    </div>
+
+
+                                    <button type="submit" class="btn bg-green pull-right col-lg-2 col-md-2 col-sm-4 col-xs-5">
+                                        <strong><i class="fa fa-plus"></i> ZAPISZ</strong></button>
+                                </div>
+
+                            </div>
+
+                        </form>
+
+                    </div>
+                </div>
+            </section>
+        </div>
+        <script>
+            $(document).ready(function () {
+                var date_input = $('input[name="startDate"]');
+                var container = $('.bootstrap-iso form').length > 0 ? $('.bootstrap-iso form').parent() : "body";
+                var options = {
+                    format: 'yyyy-mm-dd',
+                    container: container,
+                    todayHighlight: true,
+                    autoclose: true,
+                    orientation: "top",
+                    startDate: '-1d',
+                    endDate: '+60d',
+                };
+                date_input.datepicker(options);
+            })
+
+            $(document).ready(function () {
+                var date_input = $('input[name="endDate"]'); 
+                var container = $('.bootstrap-iso form').length > 0 ? $('.bootstrap-iso form').parent() : "body";
+                var options = {
+                    format: 'yyyy-mm-dd',
+                    container: container,
+                    todayHighlight: true,
+                    autoclose: true,
+                    orientation: "top",
+                    startDate: '-1d',
+                    endDate: '+60d',
+                };
+                date_input.datepicker(options);
+            })
+
+        </script>
+    </body>
+</html>

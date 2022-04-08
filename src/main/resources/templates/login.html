@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta charset="UTF-8"/>
+        <title>Car rental</title>
+        <th:block th:include="include/css" />
+
+        <style>
+            .form-login {
+                background-color: #EDEDED;
+                padding-top: 10px;
+                padding-bottom: 20px;
+                padding-left: 20px;
+                padding-right: 20px;
+                border-radius: 15px;
+                border-color:#d2d2d2;
+                border-width: 5px;
+                box-shadow:0 1px 0 #cfcfcf;
+            }
+        </style>
+    </head>
+    <body class="hold-transition login-page">
+
+
+        <div class="login-box-body">
+
+            <div class="login-logo">
+                <img src="logo.png"/>
+            </div>
+
+            <h2 class="login-box-msg text-primary">
+                <strong>CAR RENTAL - WYPOŻYCZALNIA SAMOCHODÓW</strong>
+            </h2>
+
+            <div class="login-box">
+                <div th:if="${param.logout}" class="callout callout-info">
+                    <p>Zostałeś wylogowany</p>
+                </div>
+                <div th:if="${param.error}" class="callout callout-danger">
+                    <p>Nieprawidłowa nazwa użytkownika lub hasło</p>
+                </div>
+
+                <div class="form-login">
+                    <h3 class="login-box-msg text-primary">
+                        <strong>Logowanie</strong>
+                    </h3>
+                    <form  th:action="@{/login}" method="post">
+                        <div class="form-group has-feedback">
+                            <span class="glyphicon glyphicon-user form-control-feedback"></span>
+                            <input type="text" name="login" class="form-control" placeholder="Nazwa użytkownika"
+                                   required="required"/>
+
+                        </div>
+                        <div class="form-group has-feedback">
+                            <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+                            <input type="password" name="password" class="form-control" placeholder="Hasło użytkownika"
+                                   required="required"/>
+
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <button type="submit" class="btn btn-primary btn-block"><strong><i class="fa fa-sign-in"></i>
+                                        ZALOGUJ SIĘ</strong></button>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+
+                <br/>
+
+            </div>
+        </div>
+        <script src="https://code.jquery.com/jquery-2.2.4.min.js"
+        integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+                integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+        crossorigin="anonymous"></script>
+        <script type="text/javascript">
+            $(document).ready(function () {
+                setTimeout(function () {
+                    $('.callout').hide('slow');
+                }, 3000);
+                $('input').attr('autocomplete', 'off');
+            });
+        </script>
+    </body>
+</html>

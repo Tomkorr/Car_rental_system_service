@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>Wypożyczalnia samochodów</title>
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <meta name="author" content="Tomasz Korus"/>
+        <th:block th:include="include/css" />
+    </head>
+    <body>
+
+
+        <aside th:include="sidenav" class="main-sidebar"></aside>
+
+        <div class="content-wrapper">
+            <div class="row">
+                <div class="box box-primary">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Szczegóły wypożyczenia</h3><br></br>
+                        <a href="/rental_orders_list" class="btn bg-light-blue btn-xs"><strong><i class="fa fa-undo"></i> Wróć do
+                                listy wypożyczeń</strong></a>
+                    </div>
+
+                    <div class="box-body">
+                        <div class="col-md-6">
+                            <div th:each="order: ${orderDetails}">
+
+                                <div class="form-horizontal">
+                                    <div class="form-group row">
+                                        <label for="status" class="col-md-2 control-label">Status</label>
+                                        <div class="col-md-6">
+                                            <input id="status" type="text" class="form-control"
+                                                   th:value="${order.orderStatus}"
+                                                   readonly="readonly"/>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <label for="car" class="col-md-2 control-label">Samochód</label>
+                                        <div class="col-md-6">
+                                            <a th:href="@{|/car_details/${order.carId}|}">
+                                            <input id="car" type="text" class="form-control"
+                                                   th:value="${order.brand + ' ' + order.model}"
+                                                   readonly="readonly"/></a>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <label for="client" class="col-md-2 control-label">Klient</label>
+                                        <div class="col-md-6">
+                                            <a th:href="@{|/customer_details/${order.customerId}|}">
+                                            <input id="client" type="text" class="form-control" th:value="${order.custFirstName + ' ' + order.custLastName}"
+                                                   readonly="readonly"/></a>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <label for="from" class="col-md-2 control-label">Od</label>
+                                        <div class="col-md-6">
+                                            <input id="from" type="text" class="form-control" th:value="${order.rentStartDate+''}"
+                                                   readonly="readonly"/>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <label for="to" class="col-md-2 control-label">Do</label>
+                                        <div class="col-md-6">
+                                            <input id="to" type="text" class="form-control" th:value="${order.rentEndDate+''}"
+                                                   readonly="readonly"/>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <label for="cost" class="col-md-2 control-label">Koszt</label>
+                                        <div class="col-md-6">
+                                            <input id="cost" type="text" class="form-control" th:value="${order.rentalCost + ' zł'}"
+                                                   readonly="readonly"/>
+                                        </div>
+                                    </div>
+                                    
+                                    <div th:if="${order.employeeIdReserve != null}" class="form-group row">
+                                        <label for="reserve" class="col-md-2 control-label">Zarezerwował</label>
+                                        <div class="col-md-6">
+                                            <a th:href="@{|/employee_details/${order.employeeIdReserve}|}">
+                                            <input id="reserve" type="text" class="form-control" th:value="${employeeReserve.firstName + ' ' + employeeReserve.lastName}"
+                                                   readonly="readonly"/></a>
+                                        </div>
+                                    </div>
+                                    
+                                    <div th:if="${order.employeeIdLetOut != null}" class="form-group row">
+                                        <label for="letout" class="col-md-2 control-label">Wydał</label>
+                                        <div class="col-md-6">
+                                            <a th:href="@{|/employee_details/${order.employeeIdLetOut}|}">
+                                            <input id="letout" type="text" class="form-control" th:value="${employeeLetOut.firstName + ' ' + employeeLetOut.lastName}"
+                                                   readonly="readonly"/></a>
+                                        </div>
+                                    </div>
+                                    
+                                    <div th:if="${order.employeeIdReceive != null}" class="form-group row">
+                                        <label for="receive" class="col-md-2 control-label">Przyjął</label>
+                                        <div class="col-md-6">
+                                            <a th:href="@{|/employee_details/${order.employeeIdReceive}|}">
+                                            <input id="receive" type="text" class="form-control" th:value="${employeeReceive.firstName + ' ' + employeeReceive.lastName}"
+                                                   readonly="readonly"/></a>
+                                        </div>
+                                    </div>
+                                    
+                                    <div th:if="${order.employeeIdCancelled != null}" class="form-group row">
+                                        <label for="reserve" class="col-md-2 control-label">Anulował</label>
+                                        <div class="col-md-6">
+                                            <a th:href="@{|/employee_details/${order.employeeIdCancelled}|}">
+                                            <input id="reserve" type="text" class="form-control" th:value="${employeeCancelled.firstName + ' ' + employeeCancelled.lastName}"
+                                                   readonly="readonly"/></a>
+                                        </div>
+                                    </div>
+                                    
+                                    <div th:if="${order.employeeIdCancelled != null}" class="form-group row">
+                                        <label for="reserve" class="col-md-2 control-label">Powód anulowania</label>
+                                        <div class="col-md-6">
+                                            <textarea class="col-md-12" th:text="${order.cancelReason}" style="height: 100px; resize:none;" readonly="readonly" />
+                                        </div>
+                                    </div>
+                                    <br></br>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

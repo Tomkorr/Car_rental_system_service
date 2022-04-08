@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Wypożyczalnia samochodów</title>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="author" content="Tomasz Korus"/>
+    <th:block th:include="include/css" />
+    <style>
+        .glyphicon-trash {
+            color: #F00;
+        }
+    </style>
+</head>
+<body>
+
+
+<aside th:include="sidenav" class="main-sidebar"></aside>
+
+<div class="content-wrapper">
+    <section class="content">
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="box box-primary">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Lista pracowników wypożyczalni</h3>
+                    </div>
+                    <div class="box-body">
+                        <h5>
+                            <div th:if="${param.delete}" class="callout callout-danger">
+                                <p>Usunięto pracownika</p>
+                            </div>
+                            <div th:if="${param.editSuccess}" class="callout callout-success">
+                                <p>Edytowano pracownika</p>
+                            </div>
+                        </h5>
+                        <table class="table table-bordered table-hover ">
+                            <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Imię</th>
+                                <th>Nazwisko</th>
+                                <th>Rola</th>
+                                <th data-orderable="false">Telefon</th>
+                                <th data-orderable="false">Szczegóły</th>
+                                <th data-orderable="false">Edycja</th>
+                                <th data-orderable="false">Usuń</th>
+                            </tr>
+                            </thead>
+
+                            <tbody>
+                            <tr th:each="employee, i: ${employeesList}">
+                                <td th:text="${i.index+1}"></td>
+                                <td th:text="${employee.firstName}"></td>
+                                <td th:text="${employee.lastName}"></td>
+                                <td th:if="${employee.roleName}=='ROLE_ADMIN'">ADMIN</td>
+                                <td th:if="${employee.roleName}=='ROLE_PRACOWNIK'">PRACOWNIK</td>
+                                <td th:text="${employee.phone}"></td>
+                                <td>
+                                    <a th:href="@{|/employee_details/${employee.employeeId}|}"><span class="glyphicon glyphicon-info-sign fa-lg" style="font-size: larger;">szczegóły</span></a>
+                                </td>
+                                <td>
+                                    <a th:href="@{|/employee_edit/${employee.employeeId}|}"><span style="font-size: larger;">edytuj</span></a>
+                                </td>
+                                <td>
+                                    <a th:href="@{|/delete_employee/${employee.employeeId}|}" class="btn glyphicon glyphicon-trash fa-lg"></a>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+
+<script src="https://code.jquery.com/jquery-2.2.4.min.js"
+        integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+        integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/admin-lte/2.3.6/js/app.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.12/js/dataTables.bootstrap.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        var url = document.location.toString();
+        function activaTab(tabID) {
+            $('.nav-tabs a[href="#' + tabID + '"]').tab('show');
+        };
+        activaTab(url.split('#')[1]);
+        $("html,body").animate({scrollTop: 0}, "fast");
+
+        $('table').DataTable({
+            "language": {
+                "search": "Wyszukaj: ",
+                "info": "Wyświetlono _START_ do _END_ z _TOTAL_ pracowników. ",
+                "infoEmpty": "Wyświetlono _TOTAL_ pracowników. ",
+                "infoFiltered": "Po przefiltrowaniu _TOTAL_ z _MAX_ wszystkich pracowników.",
+                "lengthMenu": "Wyświetl _MENU_ pracowników na stronie.",
+                "paginate": {
+                    "previous": "&lt;",
+                    "next": "&gt;"
+                },
+                "language": {
+                    "lengthMenu": "Display -- records per page",
+                    "zeroRecords": "No matching records found - We don't add anything yet No data available in table - no data of your choice.",
+                    "infoEmpty": "No records available"
+                }
+            }
+        });
+    });
+
+    $(document).ready(function () {
+        setTimeout(function () {
+            $('.callout').hide('slow');
+        }, 3000);
+    });
+
+</script>
+</body>
+</html>>
